@@ -1,65 +1,316 @@
 # iOS-Design-Model-Demo
 
-## English
+<p align="center">
+  <img src="https://img.shields.io/badge/Swift-5.0-orange.svg" alt="Swift 5.0">
+  <img src="https://img.shields.io/badge/iOS-13.0+-blue.svg" alt="iOS 13.0+">
+  <img src="https://img.shields.io/badge/Xcode-12.0+-brightgreen.svg" alt="Xcode 12.0+">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License">
+</p>
 
-### Introduce
+<p align="center">
+  <b>iOS 设计模式学习与实践 | iOS Design Patterns</b>
+</p>
 
-This is a repository for self-understanding of iOS design patterns and simple demos
+<p align="center">
+  <a href="#中文">中文</a> | <a href="#english">English</a>
+</p>
 
-### Details
+---
 
-Design patterns are lessons learned from solving software design problems that provide a set of reusable solutions that help developers better organize and manage code. Common design patterns in iOS development include: 
-
-1. MVC (Model-View-Controller) pattern: It is used to separate the data, user interface and control logic of the application, making the code easier to maintain and expand. 
-
-2. MVVM (Model-View-ViewModel) mode: Further decoupled on the basis of MVC, introducing a ViewModel between the view and the model, making the view more independent and testable. 
-
-3. Singleton pattern: Ensures that a class has only one instance and provides a global access point, often used to manage shared resources and global state. 
-
-4. Delegate mode: Delegate objects to distribute tasks to other objects to achieve decoupling and communication between objects. 
-
-5. Observer (Observer) pattern: defines a one-to-many dependency relationship, when an object's state changes, all the objects that depend on it will be notified. 
-
-6. Factory (factory) mode: Create objects through factory classes, encapsulate the creation logic of objects, and make the code more readable and maintainable. 
-
-7. Builder pattern: Separate the building process of an object from its representation, so that the same building process can create different representations. 
-
-8. Strategy pattern: Define a series of algorithms, encapsulate each algorithm so that they can be used interchangeably, so that the algorithm changes independently of the customers who use it. 
-
-9. Command mode: Encapsulates the request into an object, decoupling the sender from the receiver, and supporting queuing, recording and revocation of the request. 
-
-10. Adapter pattern: The interface of a class is converted into another interface expected by the client, so that incompatible classes can work together. 
-
-The above are common design patterns in iOS development, each pattern has its own specific application scenarios and advantages, according to specific needs to choose the right pattern can improve the readability, maintainability and scalability of the code.
-
+<a name="中文"></a>
 ## 中文
 
-### 介绍
+### 项目简介
 
-这是一个关于iOS设计模式的自我理解以及简单Demo的仓库
+这是一个用于学习 iOS 设计模式的示例项目，包含常见设计模式的 Swift 实现和简单 Demo。设计模式是解决软件设计问题的经验总结，提供了一套可重用的解决方案，帮助开发者更好地组织和管理代码。
 
-### 详情
+### 设计模式列表
 
-设计模式是一种解决软件设计问题的经验总结，它提供了一套可重用的解决方案，能够帮助开发人员更好地组织和管理代码。在iOS开发中，常用的设计模式包括：
+| 模式 | 中文名 | 描述 | 状态 |
+|------|--------|------|------|
+| MVC | 模型-视图-控制器 | 分离数据、界面和控制逻辑 | ✅ |
+| MVVM | 模型-视图-视图模型 | 在 MVC 基础上进一步解耦 | ✅ |
+| Singleton | 单例模式 | 确保类只有一个实例 | ✅ |
+| Delegate | 委托模式 | 对象间解耦和通信 | ✅ |
+| Observer | 观察者模式 | 一对多依赖关系 | ✅ |
+| Factory | 工厂模式 | 封装对象创建逻辑 | ✅ |
+| Builder | 建造者模式 | 分离构建过程和表示 | ✅ |
+| Strategy | 策略模式 | 算法封装和互换 | ✅ |
+| Command | 命令模式 | 请求封装为对象 | ✅ |
+| Adapter | 适配器模式 | 接口转换 | ✅ |
 
-1. MVC（Model-View-Controller）模式：用于将应用程序的数据、用户界面和控制逻辑分离，使代码更易于维护和扩展。
+### 示例代码
 
-2. MVVM（Model-View-ViewModel）模式：在MVC的基础上进一步解耦，将视图和模型之间引入一个视图模型，使视图更加独立和可测试。
+#### 1. 单例模式 (Singleton)
 
-3. Singleton（单例）模式：确保一个类只有一个实例，并提供一个全局访问点，常用于管理共享资源和全局状态。
+```swift
+class NetworkManager {
+    // 共享实例
+    static let shared = NetworkManager()
+    
+    // 私有初始化方法，防止外部创建实例
+    private init() {}
+    
+    func fetchData(completion: @escaping (Result<Data, Error>) -> Void) {
+        // 网络请求实现
+    }
+}
 
-4. Delegate（委托）模式：通过委托对象将任务分发给其他对象，实现对象之间的解耦和通信。
+// 使用
+NetworkManager.shared.fetchData { result in
+    // 处理结果
+}
+```
 
-5. Observer（观察者）模式：定义了一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都会得到通知。
+#### 2. 委托模式 (Delegate)
 
-6. Factory（工厂）模式：通过工厂类创建对象，将对象的创建逻辑封装起来，使代码更具可读性和可维护性。
+```swift
+// 定义协议
+protocol DownloadDelegate: AnyObject {
+    func downloadDidStart()
+    func downloadDidProgress(_ progress: Double)
+    func downloadDidComplete(_ data: Data)
+    func downloadDidFail(_ error: Error)
+}
 
-7. Builder（建造者）模式：将对象的构建过程与表示分离，使得同样的构建过程可以创建不同的表示。
+// 下载管理器
+class DownloadManager {
+    weak var delegate: DownloadDelegate?
+    
+    func startDownload() {
+        delegate?.downloadDidStart()
+        // 下载逻辑...
+    }
+}
 
-8. Strategy（策略）模式：定义一系列算法，将每个算法封装起来，使它们可以互换使用，从而使算法的变化独立于使用它的客户。
+// 实现委托
+class ViewController: UIViewController, DownloadDelegate {
+    let downloadManager = DownloadManager()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        downloadManager.delegate = self
+    }
+    
+    func downloadDidStart() {
+        print("下载开始")
+    }
+    
+    func downloadDidProgress(_ progress: Double) {
+        print("下载进度: \(progress)")
+    }
+    
+    func downloadDidComplete(_ data: Data) {
+        print("下载完成")
+    }
+    
+    func downloadDidFail(_ error: Error) {
+        print("下载失败: \(error)")
+    }
+}
+```
 
-9. Command（命令）模式：将请求封装成对象，使发送者和接收者之间解耦，支持请求的排队、记录和撤销操作。
+#### 3. 观察者模式 (Observer)
 
-10. Adapter（适配器）模式：将一个类的接口转换成客户端所期望的另一个接口，使得原本不兼容的类可以一起工作。
+```swift
+// 使用 NotificationCenter
+class UserManager {
+    static let userDidLoginNotification = Notification.Name("userDidLoginNotification")
+    
+    func login() {
+        // 登录逻辑
+        NotificationCenter.default.post(
+            name: UserManager.userDidLoginNotification,
+            object: self,
+            userInfo: ["userId": "12345"]
+        )
+    }
+}
 
-以上是iOS开发中常用的设计模式，每种模式都有其特定的应用场景和优势，根据具体需求选择合适的模式可以提高代码的可读性、可维护性和可扩展性。
+// 订阅通知
+class ProfileViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleUserLogin),
+            name: UserManager.userDidLoginNotification,
+            object: nil
+        )
+    }
+    
+    @objc func handleUserLogin(_ notification: Notification) {
+        if let userId = notification.userInfo?["userId"] as? String {
+            print("用户登录: \(userId)")
+        }
+    }
+}
+```
+
+#### 4. 工厂模式 (Factory)
+
+```swift
+// 产品协议
+protocol Animal {
+    func makeSound()
+}
+
+// 具体产品
+class Dog: Animal {
+    func makeSound() {
+        print("汪汪!")
+    }
+}
+
+class Cat: Animal {
+    func makeSound() {
+        print("喵喵!")
+    }
+}
+
+// 工厂类
+class AnimalFactory {
+    enum AnimalType {
+        case dog
+        case cat
+    }
+    
+    static func createAnimal(_ type: AnimalType) -> Animal {
+        switch type {
+        case .dog:
+            return Dog()
+        case .cat:
+            return Cat()
+        }
+    }
+}
+
+// 使用
+let dog = AnimalFactory.createAnimal(.dog)
+dog.makeSound() // 输出: 汪汪!
+```
+
+#### 5. MVC 模式
+
+```swift
+// Model
+struct User {
+    let id: String
+    let name: String
+    let email: String
+}
+
+// View
+class UserProfileView: UIView {
+    let nameLabel = UILabel()
+    let emailLabel = UILabel()
+    
+    func configure(with user: User) {
+        nameLabel.text = user.name
+        emailLabel.text = user.email
+    }
+}
+
+// Controller
+class UserProfileViewController: UIViewController {
+    private let userView = UserProfileView()
+    private var user: User?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        loadUserData()
+    }
+    
+    private func setupView() {
+        view.addSubview(userView)
+        // 布局代码...
+    }
+    
+    private func loadUserData() {
+        // 加载用户数据
+        user = User(id: "1", name: "张三", email: "zhangsan@example.com")
+        if let user = user {
+            userView.configure(with: user)
+        }
+    }
+}
+```
+
+### 技术栈
+
+- **编程语言**: Swift 5.0+
+- **开发环境**: Xcode 12.0+
+- **最低支持系统**: iOS 13.0+
+- **架构模式**: MVC, MVVM, 多种设计模式
+
+### 安装和运行
+
+```bash
+git clone https://github.com/MoonStartMan/iOS-Design-Model-Demo.git
+cd iOS-Design-Model-Demo
+open iOS-Design-Model-Demo.xcodeproj
+```
+
+---
+
+<a name="english"></a>
+## English
+
+### Introduction
+
+This is a repository for self-understanding of iOS design patterns and simple demos. Design patterns are lessons learned from solving software design problems that provide a set of reusable solutions that help developers better organize and manage code.
+
+### Design Patterns List
+
+| Pattern | Description | Status |
+|---------|-------------|--------|
+| MVC | Separates data, UI and control logic | ✅ |
+| MVVM | Further decoupled based on MVC | ✅ |
+| Singleton | Ensures only one instance of a class | ✅ |
+| Delegate | Decoupling and communication between objects | ✅ |
+| Observer | One-to-many dependency relationship | ✅ |
+| Factory | Encapsulates object creation logic | ✅ |
+| Builder | Separates construction from representation | ✅ |
+| Strategy | Encapsulates algorithms for interchangeability | ✅ |
+| Command | Encapsulates request as an object | ✅ |
+| Adapter | Converts interface to another expected interface | ✅ |
+
+### Project Structure
+
+```
+iOS-Design-Model-Demo/
+├── iOS-Design-Model-Demo.xcodeproj
+├── iOS-Design-Model-Demo/
+│   ├── Patterns/
+│   │   ├── Singleton/
+│   │   ├── Factory/
+│   │   ├── Observer/
+│   │   ├── Delegate/
+│   │   ├── MVC/
+│   │   ├── MVVM/
+│   │   └── ...
+│   └── Utils/
+└── README.md
+```
+
+### Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 联系方式 | Contact
+
+- GitHub: [@MoonStartMan](https://github.com/MoonStartMan)
+
+<p align="center">如果这个项目对您有帮助，请给个 ⭐️ 支持一下！<br>If this project helps you, please give it a ⭐️!</p>
